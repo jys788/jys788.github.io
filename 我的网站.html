@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>横向导航菜单</title>
+  <style>
+    /* 第一步：去掉 ul 默认的小圆点和左边空白 */
+    .nav {
+      list-style: none; /* 去掉小圆点 */
+      padding: 0;       /* 去掉左边空白 */
+      background: #f5f5f5; /* 背景色 */
+      padding: 15px;    /* 内边距 */
+    }
+
+    /* 第二步：让 li 横着排列（关键！） */
+    .nav li {
+      display: inline-block; /* 横向显示 */
+      margin: 0 15px;        /* 每个菜单之间的距离 */
+    }
+
+    /* 第三步：美化链接 */
+    .nav a {
+      text-decoration: none; /* 去掉下划线 */
+      color: #333;          /* 文字颜色 */
+      font-size: 18px;
+    }
+
+    /* 鼠标悬停效果 */
+    .nav a:hover {
+      color: #007bff;
+    }
+    * {
+       margin: 0;
+       padding: 0;
+       box-sizing: border-box;
+       font-family: system-ui, sans-serif;
+     }
+     body {
+       background: #f5f7fa;
+       padding: 20px;
+     }
+     header {
+       text-align: center;
+       margin-bottom: 30px;
+     }
+     .container {
+       max-width: 1200px;
+       margin: 0 auto;
+       display: grid;
+       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+       gap: 20px;
+     }
+     .card {
+       background: white;
+       border-radius: 12px;
+       overflow: hidden;
+       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+       cursor: pointer;
+       transition: 0.2s;
+     }
+     .card:hover {
+       transform: translateY(-4px);
+     }
+     .card img {
+       width: 100%;
+       height: 160px;
+       object-fit: cover;
+     }
+     .info {
+       padding: 12px;
+     }
+     .title {
+       font-size: 15px;
+       margin-bottom: 6px;
+       white-space: nowrap;
+       overflow: hidden;
+       
+     }
+     .price {
+       color: #ff4d4f;
+       font-weight: bold;
+     }
+     /* 弹窗 */
+     .modal {
+       position: fixed;
+       top: 0; left: 0; width: 100%; height: 100%;
+       background: rgba(0,0,0,0.6);
+       display: none;
+       align-items: center;
+       justify-content: center;
+       z-index: 999;
+     }
+     .modal-content {
+       background: white;
+       width: 90%;
+       max-width: 500px;
+       border-radius: 12px;
+       overflow: hidden;
+       position: relative;
+     }
+     .close {
+       position: absolute;
+       right: 14px; top: 10px;
+       font-size: 20px;
+       cursor: pointer;
+       z-index: 10;
+     }
+     .modal-body {
+       padding: 20px;
+       text-align: center;
+     }
+     .modal-body img {
+       max-width: 100%;
+       max-height: 300px;
+       border-radius: 8px;
+       margin-bottom: 16px;
+     }
+     .pay-btn, .download-btn {
+       padding: 10px 24px;
+       border: none;
+       border-radius: 6px;
+       font-size: 16px;
+       cursor: pointer;
+       margin-top: 10px;
+     }
+     .pay-btn {
+       background: #1677ff;
+       color: white;
+     }
+     .download-btn {
+       background: #00b42a;
+       color: white;
+       display: none;
+     }
+  </style>
+</head>
+<body>
+
+  <!-- 横向导航菜单 -->
+  <ul class="nav">
+    <li><a href="#">首页</a></li>
+    <li><a href="#">博客</a></li>
+    <li><a href="#">作品</a></li>
+    <li><a href="#">关于我</a></li>
+    <li><a href="#">联系我</a></li>
+  </ul>
+<div class="container" id="materialList">
+   <div class="card" data-id="1" data-title="风景背景图" data-price="2" data-img="https://picsum.photos/800/500?random=1">
+     <img src="https://picsum.photos/800/500?random=1" alt="图片">
+     <div class="info">
+       <div class="title">风景背景图</div>
+       <div class="price">¥2</div>
+     </div>
+   </div>
+   <div class="card" data-id="2" data-title="科技海报素材" data-price="3" data-img="https://picsum.photos/800/500?random=2">
+     <img src="https://picsum.photos/800/500?random=2" alt="图片">
+     <div class="info">
+       <div class="title">科技海报素材</div>
+       <div class="price">¥3</div>
+     </div>
+   </div>
+   <div class="card" data-id="3" data-title="简约插画" data-price="1" data-img="https://picsum.photos/800/500?random=3">
+     <img src="https://picsum.photos/800/500?random=3" alt="图片">
+     <div class="info">
+       <div class="title">简约插画</div>
+       <div class="price">¥1</div>
+     </div>
+   </div>
+   <div class="card" data-id="4" data-title="城市摄影" data-price="5" data-img="https://picsum.photos/800/500?random=4">
+     <img src="https://picsum.photos/800/500?random=4" alt="图片">
+     <div class="info">
+       <div class="title">城市摄影</div>
+       <div class="price">¥5</div>
+     </div>
+   </div>
+ </div>
+ <!-- 详情弹窗 -->
+ <div class="modal" id="detailModal">
+   <div class="modal-content">
+     <div class="close" onclick="closeModal()">×</div>
+     <div class="modal-body">
+       <img id="modalImg" src="">
+       <h3 id="modalTitle"></h3>
+       <p style="margin:10px 0;">价格：<span id="modalPrice" style="color:red"></span> 元</p >
+       <button class="pay-btn" id="payBtn">立即支付</button>
+       <a id="downloadLink" download>
+         <button class="download-btn" id="downloadBtn">下载原图</button>
+       </a >
+     </div>
+   </div>
+ </div>
+ <script>
+   let currentImg = ''
+   // 打开弹窗
+   document.querySelectorAll('.card').forEach(card => {
+     card.onclick = () => {
+       let title = card.dataset.title
+       let price = card.dataset.price
+       let img = card.dataset.img
+       currentImg = img
+       document.getElementById('modalTitle').innerText = title
+       document.getElementById('modalPrice').innerText = price
+       document.getElementById('modalImg').src = img
+       document.getElementById('detailModal').style.display = 'flex'
+       document.getElementById('payBtn').style.display = 'inline-block'
+       document.getElementById('downloadBtn').style.display = 'none'
+     }
+   })
+   // 关闭弹窗
+   function closeModal() {
+     document.getElementById('detailModal').style.display = 'none'
+   }
+   // 模拟支付
+   document.getElementById('payBtn').onclick = () => {
+     if(confirm('确认支付？')){
+       document.getElementById('payBtn').style.display = 'none'
+       document.getElementById('downloadBtn').style.display = 'inline-block'
+       document.getElementById('downloadLink').href = currentImg
+     }
+   }
+</body>
+</html>
