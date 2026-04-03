@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>宝贝日常生活集</title>
+<style>
+  /* 外层容器：整体居中 */
+  .video-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;       /* 自动换行 */
+    justify-content: center; /* 水平居中 */
+    gap: 20px;             /* 视频之间间距 */
+  }
+
+  /* 单个视频项 */
+  .video-item {
+    width: 320px;
+    text-align: center;    /* 标题居中 */
+  }
+
+  /* 视频样式 */
+  .video-item video {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    z-index: 1;
+  }
+
+  /* 标题样式 */
+  .video-title {
+    margin-top: 10px;
+    font-size: 16px;
+    color:royalblue;
+  }
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    min-height: 100vh;
+    background: #fff;
+  }
+
+  /* 彩虹图片 */
+  .rainbow{
+    position:fixed;
+    width:180px;
+    z-index:999;
+    pointer-events:none;
+    user-select:none;
+  }
+    /* 烟花样式 */
+  .firework {
+    position: fixed;
+    z-index: 999;
+    width: 120px;
+    pointer-events: none; /* 不影响点击视频 */
+    user-select: none;
+  }
+    /* 烟花固定在中间，不飘动 */
+   .firework {
+     position: fixed;
+     left: 90%;
+     top: 20%;
+     transform: translate(-50%, -50%);
+     z-index: 999;
+     width: 600px;
+     pointer-events: none; /* 不影响点击视频 */
+     user-select: none;
+   }
+      /* 烟花样式 */
+  .firework1 {
+    position: fixed;
+    z-index: 999;
+    width: 120px;
+    pointer-events: none; /* 不影响点击视频 */
+    user-select: none;
+  }
+    /* 烟花固定在中间，不飘动 */
+   .firework1 {
+     position: fixed;
+     left: 10%;
+     top: 20%;
+     transform: translate(-50%, -50%);
+     z-index: 999;
+     width: 600px;
+     pointer-events: none; /* 不影响点击视频 */
+     user-select: none;
+   }
+   /*.caihong 
+   {
+     position: fixed;
+     left:50%;
+     top: 45%;
+     transform: translate(-50%, -50%);
+     z-index: 1;
+     height: 1100px;
+     pointer-events: none; /* 不影响点击视频 */
+     /*user-select: none;*/
+   /*}
+</style>
+
+</head>
+<body>
+	 <img class="rainbow" src="aixin.png" id="rainbow">
+<script>
+const el = document.getElementById('rainbow');
+let x = 100, y = 100;
+// 45度移动：横向和纵向速度相同
+let speedX = 3;
+let speedY = 3;
+function animate() {
+  const w = window.innerWidth - el.offsetWidth;
+  const h = window.innerHeight - el.offsetHeight;
+
+  // 碰到左右边缘反弹
+  if (x < 0 || x > w) speedX *= -1;
+  // 碰到上下边缘反弹
+  if (y < 0 || y > h) speedY *= -1;
+
+  x += speedX;
+  y += speedY;
+
+  el.style.left = x + 'px';
+  el.style.top = y + 'px';
+
+  requestAnimationFrame(animate);
+}
+ animate();
+ 
+</script>
+<!-- 中间彩虹动态图 -->
+<!--<img class="rainbow-center" src="caichong.png" alt="彩虹">-->
+ <!-- 彩虹透明PNG -->
+ 	 <!-- 烟花图片（透明PNG） -->
+<img class="firework" id="firework" src="yanhua.png">
+<img class="firework1" id="firework1" src="yanhua.png">
+<!--<img class="caihong" id="caihong" src="caihong2.png">-->
+ 
+<div class="video-container">
+  <!-- 视频1 -->
+  <div class="video-item">
+    <video 
+    	controls src="01.mp4" 
+		autoplay 
+		muted
+  	loop
+    playsinline        <!-- 关键：内联播放 -->
+    webkit-playsinline <!-- iOS 兼容 -->
+    x5-playsinline     <!-- 安卓 X5 内核（微信/QQ） -->
+    x5-video-player-type="h5-page"  <!-- 同层渲染 -->
+  	></video>
+    <div class="video-title">滑滑梯</div>
+  </div>
+  <!-- 视频2 -->
+  <div class="video-item">
+    <video controls src="02.mp4"
+		autoplay 
+		muted
+  	loop
+  	playsinline
+  	webkit-playsinline  <!--iOS 兼容 -->
+    x5-playsinline     <!-- 安卓 X5 内核（微信/QQ） -->
+    x5-video-player-type="h5-page"  <!-- 同层渲染 -->
+  		></video>
+    <div class="video-title">踩泥坑</div>
+  </div>
+  <!-- 视频3 -->
+  <div class="video-item">
+    <video controls src="03.mp4"
+		autoplay 
+		muted
+  		loop
+  		playsinline
+  		    webkit-playsinline <!-- iOS 兼容 -->
+    x5-playsinline     <!-- 安卓 X5 内核（微信/QQ） -->
+    x5-video-player-type="h5-page"  <!-- 同层渲染 -->
+  		></video>
+    <div class="video-title">放风车</div>
+  </div>
+  <!-- 视频4-->
+  <div class="video-item">
+    <video controls src="04.mp4"
+		autoplay 
+		muted
+  		loop
+  		playsinline
+  		    webkit-playsinline <!-- iOS 兼容 -->
+    x5-playsinline     <!-- 安卓 X5 内核（微信/QQ） -->
+    x5-video-player-type="h5-page"  <!-- 同层渲染 -->
+  		></video>
+    <div class="video-title">遛蝴蝶</div>
+      </div>
+      <!-- 视频5-->
+  <div class="video-item">
+    <video controls src="05.mp4"
+		autoplay 
+		muted
+  		loop
+  		playsinline
+  		    webkit-playsinline <!-- iOS 兼容 -->
+    x5-playsinline     <!-- 安卓 X5 内核（微信/QQ） -->
+    x5-video-player-type="h5-page"  <!-- 同层渲染 -->
+  		></video>
+    <div class="video-title">学习中</div>
+      </div>
+      <!-- 视频6-->
+  <div class="video-item">
+    <video controls src="06.mp4"
+		autoplay 
+		muted
+  		loop
+  		playsinline
+  		    webkit-playsinline <!-- iOS 兼容 -->
+    x5-playsinline     <!-- 安卓 X5 内核（微信/QQ） -->
+    x5-video-player-type="h5-page"  <!-- 同层渲染 -->
+  		></video>
+    <div class="video-title">水草舞</div>
+      </div>
+</body>
+</html>
