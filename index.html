@@ -1,310 +1,58 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta charset="UTF-8">
-<title>宝贝日常生活集</title>
-<style>
-	  /**{margin:0;padding:0;}*/
-  /* 外层容器：整体居中 */
-   *{margin:0;padding:0;box-sizing:border-box;}
-   html{font-size:62.5%;}
-   body{font-size:1.6rem;background:#000;}
-   img{max-width:100%;height:auto;}
-   .box{padding:1.5rem;margin:1rem;}
-   @media(max-width:1500px){
-    .box{padding:1rem;}
-   }
-.video-container video {
-  width: 100%;
-  height: auto;
-  display: block;
-  object-fit: contain;
-}.biaoti h1{
-	/*text-align:center;*/
-	width: 1300px;
-	padding-left: 725px;
-	color: #F5F5F5;
-	margin-bottom:106px ;
-	/*position: relative; /* 必须加，激活 z-index */*/
-  z-index: 999;
-}
-.qita{
-		
-		width:1300px;
-		/*padding: 10px;*/
-		/*text-align:center;*/
-		margin-left: 55px;
-	  position: relative; /* 必须加，激活 z-index */
-    z-index: 559;
-    display: flex;
-}
-  .video-container {
-  	width: 100%;
-    max-width: 1500px;
-    margin-left: 205px;
-    padding: 20px;
-    display: flex;
-    flex-wrap: wrap;       /* 自动换行 */
-    justify-content: center; /* 水平居中 */
-    gap: 40px;             /* 视频之间间距 */
-    position: relative; /* 必须加，激活 z-index */
-    z-index: 1;
-  }
-
-  /* 单个视频项 */
-  .video-item {
-    width: 236px;
-    text-align: center;    /* 标题居中 */
-    position: relative; /* 必须加，激活 z-index */
-    z-index: 1;
-  }
-
-  /* 视频样式 */
-  .video-item video {
- 
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    object-fit: cover;
-    position: relative; /* 必须加，激活 z-index */
-    z-index: 1;
-  }
-
-  /* 标题样式 */
-  .video-title {
-    margin-top: 10px;
-    font-size: 16px;
-    color:royalblue;
-    position: relative; /* 必须加，激活 z-index */
-    z-index: 1;
-  }
-    /** {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }*/
-  /*body {
-    min-height: 100vh;
-    background: #fff;
-  }*/
-
-
-
-    /* 烟花固定在中间，不飘动 */
-   .firework1 {
-     position: fixed;
-     left: 90%;
-     top: 20%;
-     transform: translate(-50%, -50%);
-     position: relative; /* 必须加，激活 z-index */
-     z-index: 799;
-     width: 400px;
-     pointer-events: none; /* 不影响点击视频 */
-     user-select: none;
-   }
-    /* 烟花固定在中间，不飘动 */
-   .firework2 {
-     position: fixed;
-     transform: translate(-50%, -50%);
-     position: relative; /* 必须加，激活 z-index */
-     z-index: 799;
-     width: 400px;
-     pointer-events: none; /* 不影响点击视频 */
-     user-select: none;
-   }
-   /*.caihong 
-   {
-     position: fixed;
-     left:50%;
-     top: 45%;
-     transform: translate(-50%, -50%);
-     z-index: 1;
-     height: 1100px;
-     pointer-events: none; /* 不影响点击视频 */
-     /*user-select: none;*/
-   /*}
- 
-     /* 烟花固定在中间，不飘动 */
-   .fengche {
-     position: fixed;
-		 /*text-align: center;*/
-     transform: translate(-50%, -50%);
-     width: 300px;
-     pointer-events: none; /* 不影响点击视频 */
-     position: relative; /* 必须加，激活 z-index */
-     user-select: none;
-     z-index: 999;
-     
-   }
-   .aixin{
-   	width: 150px;
-    position: relative; /* 必须加，激活 z-index */
-    z-index: 559;
-    margin: 0,auto;
-    /*position: fixed;*/
-   }
-     /* 心图片 */
-  .rainbow{
-    position:fixed;
-    width:180px;
-    position: relative; /* 必须加，激活 z-index */
-    z-index:999;
-    pointer-events:none;
-    user-select:none;
-  }
-  /* yueliang升降图片 */
-  #floatImg {
-    position: fixed;
-    /*left: 10%;*/
-    transform: translateX(-50%);
-    width: 180px;
-    /*position: relative; /* 必须加，激活 z-index */*/
-    z-index: 999;
-    /* 循环动画 */
-    animation: floatUpDown 10s ease-in-out infinite;
-  }
-  /* 动画：底部 → 4/5 → 1/5 → 循环 */
-  @keyframes floatUpDown {
-    0% {
-      bottom: 0;              /* 最底部 */
+  <meta charset="UTF-8">
+  <title>我的免费网站</title>
+  <style>
+    body { text-align: center; margin-top: 50px; }
+    img { width: 300px; border-radius: 10px; }
+    ul { list-style-type: none; padding: 0; }
+    li { margin: 10px 0; }
+    a { font-size: 20px; text-decoration: none; }
+        /* 第一步：去掉 ul 默认的小圆点和左边空白 */
+    .nav {
+      list-style: none; /* 去掉小圆点 */
+      padding: 0;       /* 去掉左边空白 */
+      background: #f5f5f5; /* 背景色 */
+      padding: 15px;    /* 内边距 */
     }
-    40% {
-      bottom: 20vh;           /* 上升到 4/5 位置 */
+
+    /* 第二步：让 li 横着排列（关键！） */
+    .nav li {
+      display: inline-block; /* 横向显示 */
+      margin: 0 15px;        /* 每个菜单之间的距离 */
     }
-    60% {
-      bottom: 80vh;           /* 下降到 1/5 位置 */
+
+    /* 第三步：美化链接 */
+    .nav a {
+      text-decoration: none; /* 去掉下划线 */
+      color: #333;          /* 文字颜色 */
+      font-size: 18px;
     }
-    100% {
-      bottom: 20vh;           /* 回到 4/5 位置 */
+
+    /* 鼠标悬停效果 */
+    .nav a:hover {
+      color: #007bff;
     }
-  }
-  .yueliang{
-  	text-align: center;
-  }
-</style>
+  </style>
 </head>
-
-
-
 <body>
-	<div class="box">安卓手机自适应正常显示
-	<div class="biaoti">
-			<h1>宝贝日常生活</h1>
-	</div>
-<div class="aixin">
-<img class="rainbow" src="aixin.png" id="rainbow">
-</div>
-<script>
-const el = document.getElementById('rainbow');
-let x = 100, y = 100;
-// 45度移动：横向和纵向速度相同
-let speedX = 3;
-let speedY = 3;
-function animate() {
-  const w = window.innerWidth - el.offsetWidth;
-  const h = window.innerHeight - el.offsetHeight;
-  // 碰到左右边缘反弹
-  if (x < 0 || x > w) speedX *= -1;
-  // 碰到上下边缘反弹
-  if (y < 0 || y > h) speedY *= -1;
-  x += speedX;
-  y += speedY;
-  el.style.left = x + 'px';
-  el.style.top = y + 'px';
-  requestAnimationFrame(animate);
-}
- animate();
-</script>
- 	 <!-- 烟花图片（透明PNG） -->
- 	 <div class="qita">
-			<img class="firework1" src="yanhua.png">
-			<img class="firework2" src="yanhua.png">
-			<img class="fengche" src="fengche.gif"> 
- 	 </div>
- 	 <div class="yueliang">
- 	 		<img id="floatImg" src="yueliang.png" alt="浮动图片">  
- 	 </div>
-<div class="video-container">
-  <!-- 视频1 -->
-  <div class="video-item">
-    <video 
-    controls src="01.mp4" 
-		autoplay 
-		muted
-  	loop
-    playsinline        <!-- 关键：内联播放 -->
-    webkit-playsinline  <!-- iOS 兼容 -->
-    x5-playsinline     <!-- 安卓 X5 内核（微信/QQ） -->
-    x5-video-player-type="h5-page"  <!-- 同层渲染 -->
-  	></video>
-    <div class="video-title">滑滑梯</div>
-  </div>
-  <!-- 视频2 -->
-  <div class="video-item">
-    <video controls src="02.mp4"
-		autoplay 
-		muted
-  	loop
-  	playsinline
-  	webkit-playsinline  <!--iOS 兼容 -->
-    x5-playsinline     <!-- 安卓 X5 内核（微信/QQ） -->
-    x5-video-player-type="h5-page"  <!-- 同层渲染 -->
-  		></video>
-    <div class="video-title">踩泥坑</div>
-  </div>
-  <!-- 视频3 -->
-  <div class="video-item">
-    <video controls src="03.mp4"
-		autoplay 
-		muted
-  	loop
-  	playsinline
-  	webkit-playsinline <!-- iOS 兼容 -->
-    x5-playsinline     <!-- 安卓 X5 内核（微信/QQ） -->
-    x5-video-player-type="h5-page"  <!-- 同层渲染 -->
-  		></video>
-    <div class="video-title">放风车</div>
-  </div>
-  <!-- 视频4-->
-  <div class="video-item">
-    <video controls src="04.mp4"
-		autoplay 
-		muted
-  	loop
-  	playsinline
-  	webkit-playsinline <!-- iOS 兼容 -->
-    x5-playsinline     <!-- 安卓 X5 内核（微信/QQ） -->
-    x5-video-player-type="h5-page"  <!-- 同层渲染 -->
-  		></video>
-    <div class="video-title">遛蝴蝶</div>
-      </div>
-      <!-- 视频5-->
-  <div class="video-item">
-    <video controls src="05.mp4"
-		autoplay 
-		muted
-  	loop
-  	playsinline
-  	webkit-playsinline <!-- iOS 兼容 -->
-    x5-playsinline     <!-- 安卓 X5 内核（微信/QQ） -->
-    x5-video-player-type="h5-page"  <!-- 同层渲染 -->
-  		></video>
-    <div class="video-title">学习中</div>
-      </div>
-      <!-- 视频6-->
-  <div class="video-item">
-    <video controls src="06.mp4"
-		autoplay 
-		muted
-  	loop
-  	playsinline
-  	webkit-playsinline <!-- iOS 兼容 -->
-    x5-playsinline     <!-- 安卓 X5 内核（微信/QQ） -->
-    x5-video-player-type="h5-page"  <!-- 同层渲染 -->
-  		></video>
-    <div class="video-title">水草舞</div>
-    </div>   
-    </div>
+
+  <h1>我的第一个免费网站</h1>
+
+  <!-- 点击图片跳转 -->
+  <a href="https://www.baidu.com" target="_blank">
+    <img src="https://picsum.photos/300/200" alt="点击跳转">
+  </a>
+
+ <!-- 横向导航菜单 -->
+  <ul class="nav">
+    <li><a href="#">首页</a></li>
+    <li><a href="#">博客</a></li>
+    <li><a href="#">作品</a></li>
+    <li><a href="#">关于我</a></li>
+    <li><a href="#">联系我</a></li>
+  </ul>
+
 </body>
 </html>
