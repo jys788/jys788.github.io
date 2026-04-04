@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <title>宝贝日常生活集</title>
 <style>
+	  *{margin:0;padding:0;}
+  body{ background:#000; }
   /* 外层容器：整体居中 */
   .video-container {
     max-width: 1200px;
@@ -36,15 +38,15 @@
     font-size: 16px;
     color:royalblue;
   }
-    * {
+    /** {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-  }
-  body {
+  }*/
+  /*body {
     min-height: 100vh;
     background: #fff;
-  }
+  }*/
 
   /* 彩虹图片 */
   .rainbow{
@@ -103,6 +105,31 @@
      pointer-events: none; /* 不影响点击视频 */
      /*user-select: none;*/
    /*}
+ /* 升降图片 */
+  #floatImg {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 180px;
+    z-index: 10;
+    /* 循环动画 */
+    animation: floatUpDown 10s ease-in-out infinite;
+  }
+  /* 动画：底部 → 4/5 → 1/5 → 循环 */
+  @keyframes floatUpDown {
+    0% {
+      bottom: 0;              /* 最底部 */
+    }
+    40% {
+      bottom: 20vh;           /* 上升到 4/5 位置 */
+    }
+    60% {
+      bottom: 80vh;           /* 下降到 1/5 位置 */
+    }
+    100% {
+      bottom: 20vh;           /* 回到 4/5 位置 */
+    }
+  }
 </style>
 
 </head>
@@ -221,6 +248,11 @@ function animate() {
     x5-video-player-type="h5-page"  <!-- 同层渲染 -->
   		></video>
     <div class="video-title">水草舞</div>
-      </div>
+     </div>
+     
+     
+  <img id="floatImg" src="yueliang.png" alt="浮动图片">   
+     
+ 
 </body>
 </html>
