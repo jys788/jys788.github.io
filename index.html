@@ -19,6 +19,10 @@
 	color: #F5F5F5;
 	margin: 15px;
 }
+.qita{
+	  position: relative; /* 必须加，激活 z-index */
+    z-index: 999;
+}
   .video-container {
   	width: 100%;
     max-width: 700px;
@@ -130,7 +134,7 @@
     left: 50%;
     transform: translateX(-50%);
     width: 180px;
-    z-index: 10;
+    z-index: 999;
     /* 循环动画 */
     animation: floatUpDown 10s ease-in-out infinite;
   }
@@ -167,8 +171,7 @@
 	<div class="biaoti">
 			<h1>宝贝日常生活</h1>
 	</div>
-
-	 <img class="rainbow" src="aixin.png" id="rainbow">
+<img class="rainbow" src="aixin.png" id="rainbow">
 <script>
 const el = document.getElementById('rainbow');
 let x = 100, y = 100;
@@ -178,36 +181,31 @@ let speedY = 3;
 function animate() {
   const w = window.innerWidth - el.offsetWidth;
   const h = window.innerHeight - el.offsetHeight;
-
   // 碰到左右边缘反弹
   if (x < 0 || x > w) speedX *= -1;
   // 碰到上下边缘反弹
   if (y < 0 || y > h) speedY *= -1;
-
   x += speedX;
   y += speedY;
-
   el.style.left = x + 'px';
   el.style.top = y + 'px';
-
   requestAnimationFrame(animate);
 }
  animate();
  
 </script>
-<!-- 中间彩虹动态图 -->
-<!--<img class="rainbow-center" src="caichong.png" alt="彩虹">-->
- <!-- 彩虹透明PNG -->
  	 <!-- 烟花图片（透明PNG） -->
+ 	 <div class="qita">
 <img class="firework" id="firework" src="yanhua.png">
 <img class="firework1" id="firework1" src="yanhua.png">
-<!--<img class="caihong" id="caihong" src="caihong2.png">-->
- <img class="fengche" id="fengche" src="fengche.gif">
+<img class="fengche" id="fengche" src="fengche.gif"> 
+<img id="floatImg" src="yueliang.png" alt="浮动图片">   
+ 	 </div>
 <div class="video-container">
   <!-- 视频1 -->
   <div class="video-item">
     <video 
-    	controls src="01.mp4" 
+    controls src="01.mp4" 
 		autoplay 
 		muted
   	loop
@@ -282,10 +280,6 @@ function animate() {
     x5-video-player-type="h5-page"  <!-- 同层渲染 -->
   		></video>
     <div class="video-title">水草舞</div>
-     </div>
-     
-     
-  <img id="floatImg" src="yueliang.png" alt="浮动图片">   
-     
+    </div>   
 </body>
 </html>
