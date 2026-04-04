@@ -14,26 +14,35 @@
   height: auto;
   display: block;
   object-fit: contain;
-}*/
+}*/.biaoti h1{
+	text-align:center;
+	color: #F5F5F5;
+	margin: 15px;
+}
   .video-container {
   	width: 100%;
-    max-width: 1200px;
+    max-width: 700px;
     margin: 0 auto;
     padding: 20px;
     display: flex;
     flex-wrap: wrap;       /* 自动换行 */
     justify-content: center; /* 水平居中 */
-    gap: 20px;             /* 视频之间间距 */
+    gap: 40px;             /* 视频之间间距 */
+       position: relative; /* 必须加，激活 z-index */
+    z-index: 1;
   }
 
   /* 单个视频项 */
   .video-item {
     width: 320px;
     text-align: center;    /* 标题居中 */
+       position: relative; /* 必须加，激活 z-index */
+    z-index: 1;
   }
 
   /* 视频样式 */
   .video-item video {
+ 
     width: 100%;
     height: auto;
     border-radius: 8px;
@@ -155,6 +164,10 @@
 
 </head>
 <body>
+	<div class="biaoti">
+			<h1>宝贝日常生活</h1>
+	</div>
+
 	 <img class="rainbow" src="aixin.png" id="rainbow">
 <script>
 const el = document.getElementById('rainbow');
