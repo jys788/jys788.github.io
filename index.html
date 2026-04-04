@@ -5,10 +5,16 @@
 <meta charset="UTF-8">
 <title>宝贝日常生活集</title>
 <style>
-	  *{margin:0;padding:0;}
-  body{ background:#000;}
+	  /**{margin:0;padding:0;}*/
   /* 外层容器：整体居中 */
-
+   *{margin:0;padding:0;box-sizing:border-box;}
+   html{font-size:62.5%;}
+   body{font-size:1.6rem;background:#000;}
+   img{max-width:100%;height:auto;}
+   .box{padding:1.5rem;margin:1rem;background:#f5f5f5;}
+   @media(max-width:480px){
+     .box{padding:1rem;}
+   }
 /*.video-container video {
   width: 100%;
   height: auto;
@@ -26,7 +32,7 @@
 		
 		width:1300px;
 		/*padding: 10px;*/
-		text-align:center;
+		/*text-align:center;*/
 		margin-left: 155px;
 	  position: relative; /* 必须加，激活 z-index */
     z-index: 559;
