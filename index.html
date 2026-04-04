@@ -6,7 +6,7 @@
 <title>宝贝日常生活集</title>
 <style>
 	  *{margin:0;padding:0;}
-  body{ background:#000; }
+  body{ background:#000;}
   /* 外层容器：整体居中 */
 
 /*.video-container video {
@@ -16,18 +16,25 @@
   object-fit: contain;
 }*/.biaoti h1{
 	text-align:center;
+	
 	color: #F5F5F5;
 	margin: 15px;
 	position: relative; /* 必须加，激活 z-index */
   z-index: 999;
 }
 .qita{
+		
+		width:1300px;
+		/*padding: 10px;*/
+		text-align:center;
+		margin-left: 155px;
 	  position: relative; /* 必须加，激活 z-index */
     z-index: 559;
+    display: flex;
 }
   .video-container {
   	width: 100%;
-    max-width: 700px;
+    max-width: 1300px;
     margin: 0 auto;
     padding: 20px;
     display: flex;
@@ -75,54 +82,27 @@
     background: #fff;
   }*/
 
-  /* 彩虹图片 */
-  .rainbow{
-    position:fixed;
-    width:180px;
-    position: relative; /* 必须加，激活 z-index */
-    z-index:999;
-    pointer-events:none;
-    user-select:none;
-  }
-    /* 烟花样式 */
-  .firework {
-    position: fixed;
-    position: relative; /* 必须加，激活 z-index */
-    z-index: 999;
-    width: 120px;
-    pointer-events: none; /* 不影响点击视频 */
-    user-select: none;
-  }
+
+
     /* 烟花固定在中间，不飘动 */
-   .firework {
+   .firework1 {
      position: fixed;
      left: 90%;
      top: 20%;
      transform: translate(-50%, -50%);
      position: relative; /* 必须加，激活 z-index */
-     z-index: 999;
-     width: 600px;
+     z-index: 799;
+     width: 400px;
      pointer-events: none; /* 不影响点击视频 */
      user-select: none;
    }
-      /* 烟花样式 */
-  .firework1 {
-    position: fixed;
-    position: relative; /* 必须加，激活 z-index */
-    z-index: 999;
-    width: 120px;
-    pointer-events: none; /* 不影响点击视频 */
-    user-select: none;
-  }
     /* 烟花固定在中间，不飘动 */
-   .firework1 {
+   .firework2 {
      position: fixed;
-     left: 10%;
-     top: 20%;
      transform: translate(-50%, -50%);
      position: relative; /* 必须加，激活 z-index */
-     z-index: 999;
-     width: 600px;
+     z-index: 799;
+     width: 400px;
      pointer-events: none; /* 不影响点击视频 */
      user-select: none;
    }
@@ -137,13 +117,42 @@
      pointer-events: none; /* 不影响点击视频 */
      /*user-select: none;*/
    /*}
- /* 升降图片 */
+ 
+     /* 烟花固定在中间，不飘动 */
+   .fengche {
+     position: fixed;
+		 /*text-align: center;*/
+     transform: translate(-50%, -50%);
+     width: 300px;
+     pointer-events: none; /* 不影响点击视频 */
+     position: relative; /* 必须加，激活 z-index */
+     user-select: none;
+     z-index: 999;
+     
+   }
+   .aixin{
+   	width: 50px;
+    position: relative; /* 必须加，激活 z-index */
+    z-index: 559;
+    margin: 0,auto;
+    /*position: fixed;*/
+   }
+     /* 心图片 */
+  .rainbow{
+    position:fixed;
+    width:180px;
+    position: relative; /* 必须加，激活 z-index */
+    z-index:999;
+    pointer-events:none;
+    user-select:none;
+  }
+  /* yueliang升降图片 */
   #floatImg {
     position: fixed;
-    left: 50%;
+    /*left: 10%;*/
     transform: translateX(-50%);
     width: 180px;
-    position: relative; /* 必须加，激活 z-index */
+    /*position: relative; /* 必须加，激活 z-index */*/
     z-index: 999;
     /* 循环动画 */
     animation: floatUpDown 10s ease-in-out infinite;
@@ -163,26 +172,21 @@
       bottom: 20vh;           /* 回到 4/5 位置 */
     }
   }
-     /* 烟花固定在中间，不飘动 */
-   .fengche {
-     position: fixed;
-     left: 10%;
-     top:70%;
-     transform: translate(-50%, -50%);
-     position: relative; /* 必须加，激活 z-index */
-     z-index: 999;
-     width: 500px;
-     pointer-events: none; /* 不影响点击视频 */
-     user-select: none;
-   }
+  .yueliang{
+  	text-align: center;
+  }
 </style>
-
 </head>
+
+
+
 <body>
 	<div class="biaoti">
 			<h1>宝贝日常生活</h1>
 	</div>
+<div class="aixin">
 <img class="rainbow" src="aixin.png" id="rainbow">
+</div>
 <script>
 const el = document.getElementById('rainbow');
 let x = 100, y = 100;
@@ -203,14 +207,15 @@ function animate() {
   requestAnimationFrame(animate);
 }
  animate();
- 
 </script>
  	 <!-- 烟花图片（透明PNG） -->
  	 <div class="qita">
-<img class="firework" id="firework" src="yanhua.png">
-<img class="firework1" id="firework1" src="yanhua.png">
-<img class="fengche" id="fengche" src="fengche.gif"> 
-<img id="floatImg" src="yueliang.png" alt="浮动图片">   
+			<img class="firework1" src="yanhua.png">
+			<img class="firework2" src="yanhua.png">
+			<img class="fengche" src="fengche.gif"> 
+ 	 </div>
+ 	 <div class="yueliang">
+ 	 		<img id="floatImg" src="yueliang.png" alt="浮动图片">  
  	 </div>
 <div class="video-container">
   <!-- 视频1 -->
