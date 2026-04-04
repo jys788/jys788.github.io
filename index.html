@@ -18,10 +18,12 @@
 	text-align:center;
 	color: #F5F5F5;
 	margin: 15px;
+	position: relative; /* 必须加，激活 z-index */
+  z-index: 999;
 }
 .qita{
 	  position: relative; /* 必须加，激活 z-index */
-    z-index: 999;
+    z-index: 559;
 }
   .video-container {
   	width: 100%;
@@ -32,7 +34,7 @@
     flex-wrap: wrap;       /* 自动换行 */
     justify-content: center; /* 水平居中 */
     gap: 40px;             /* 视频之间间距 */
-       position: relative; /* 必须加，激活 z-index */
+    position: relative; /* 必须加，激活 z-index */
     z-index: 1;
   }
 
@@ -40,7 +42,7 @@
   .video-item {
     width: 320px;
     text-align: center;    /* 标题居中 */
-       position: relative; /* 必须加，激活 z-index */
+    position: relative; /* 必须加，激活 z-index */
     z-index: 1;
   }
 
