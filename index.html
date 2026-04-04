@@ -62,6 +62,8 @@
     margin-top: 10px;
     font-size: 16px;
     color:royalblue;
+    position: relative; /* 必须加，激活 z-index */
+    z-index: 1;
   }
     /** {
     margin: 0;
@@ -77,6 +79,7 @@
   .rainbow{
     position:fixed;
     width:180px;
+    position: relative; /* 必须加，激活 z-index */
     z-index:999;
     pointer-events:none;
     user-select:none;
@@ -84,6 +87,7 @@
     /* 烟花样式 */
   .firework {
     position: fixed;
+    position: relative; /* 必须加，激活 z-index */
     z-index: 999;
     width: 120px;
     pointer-events: none; /* 不影响点击视频 */
@@ -95,6 +99,7 @@
      left: 90%;
      top: 20%;
      transform: translate(-50%, -50%);
+     position: relative; /* 必须加，激活 z-index */
      z-index: 999;
      width: 600px;
      pointer-events: none; /* 不影响点击视频 */
@@ -103,6 +108,7 @@
       /* 烟花样式 */
   .firework1 {
     position: fixed;
+    position: relative; /* 必须加，激活 z-index */
     z-index: 999;
     width: 120px;
     pointer-events: none; /* 不影响点击视频 */
@@ -114,6 +120,7 @@
      left: 10%;
      top: 20%;
      transform: translate(-50%, -50%);
+     position: relative; /* 必须加，激活 z-index */
      z-index: 999;
      width: 600px;
      pointer-events: none; /* 不影响点击视频 */
@@ -136,6 +143,7 @@
     left: 50%;
     transform: translateX(-50%);
     width: 180px;
+    position: relative; /* 必须加，激活 z-index */
     z-index: 999;
     /* 循环动画 */
     animation: floatUpDown 10s ease-in-out infinite;
@@ -161,6 +169,7 @@
      left: 10%;
      top:70%;
      transform: translate(-50%, -50%);
+     position: relative; /* 必须加，激活 z-index */
      z-index: 999;
      width: 500px;
      pointer-events: none; /* 不影响点击视频 */
