@@ -28,6 +28,7 @@
     width: 100%;
     height: auto;
     border-radius: 8px;
+    object-fit: cover;
     position: relative; /* 必须加，激活 z-index */
     z-index: 1;
   }
@@ -130,6 +131,17 @@
       bottom: 20vh;           /* 回到 4/5 位置 */
     }
   }
+     /* 烟花固定在中间，不飘动 */
+   .fengche {
+     position: fixed;
+     left: 10%;
+     top:70%;
+     transform: translate(-50%, -50%);
+     z-index: 999;
+     width: 500px;
+     pointer-events: none; /* 不影响点击视频 */
+     user-select: none;
+   }
 </style>
 
 </head>
@@ -168,7 +180,7 @@ function animate() {
 <img class="firework" id="firework" src="yanhua.png">
 <img class="firework1" id="firework1" src="yanhua.png">
 <!--<img class="caihong" id="caihong" src="caihong2.png">-->
- 
+ <img class="fengche" id="fengche" src="fengche.gif">
 <div class="video-container">
   <!-- 视频1 -->
   <div class="video-item">
@@ -253,6 +265,5 @@ function animate() {
      
   <img id="floatImg" src="yueliang.png" alt="浮动图片">   
      
- 
 </body>
 </html>
