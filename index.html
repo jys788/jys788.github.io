@@ -2,150 +2,44 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>我的免费网站</title>
-  <style>
-    * {
-       margin: 0;
-       padding: 0;
-       box-sizing: border-box;
-       font-family: sans-serif;
-     }
-     /* 横向导航栏 */
-     nav {
-       background: #333;
-     }
-     .nav-menu {
-       display: flex;
-       list-style: none;
-     }
-     .nav-menu li {
-       padding: 14px 20px;
-       color: white;
-       cursor: pointer;
-       transition: 0.3s;
-     }
-     .nav-menu li:hover,
-     .nav-menu li.active {
-       background: #007bff;
-     }
-     /* 内容区域 */
-     .content {
-       padding: 20px;
-     }
-     .tab-content {
-       display: none;
-     }
-     .tab-content.active {
-       display: block;
-     }
-     /* 照片网格 */
-     .photo-grid {
-       display: grid;
-       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-       gap: 15px;
-       margin-top: 15px;
-     }
-     .photo-grid img {
-       width: 100%;
-       height: 280px;
-       object-fit: cover;
-       border-radius: 6px;
-       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-     }
-     /* 视频样式 */
-     .video-box {
-       margin-top: 15px;
-     }
-     video {
-       /*max-width: 100%;*/
-      width: 230px;
-       border-radius: 6px;
-       outline: none;
-     }
-     .sh{
-     	display: flex;
-     }
-     .fc{
-     	width: 66px;
-     }
-     .yh{
-     	width: 66px;
-     }
-  </style>
+  <title>我的第一个网页</title>
 </head>
 <body>
 
-  <h1>我的网站</h1>
+  <h1>学习：链接、图片、列表</h1>
 
-  <div class="sh">
-  	<img class="yh" src="yanhua.png" alt="烟花">
-     <img class="fc" src="fengche.gif" alt="动态风车">
-     <img class="yh" src="yanhua.png" alt="烟花">
-  </div>
-  <!-- 横向导航菜单 -->
-   <nav>
-     <ul class="nav-menu">
-     	<li class="tab-btn first active" data-tab="first">首页</li>
-       <li class="tab-btn" data-tab="photo">照片</li>
-       <li class="tab-btn" data-tab="video">视频</li>
-     </ul>
-   </nav>
-<!-- 照片内容 -->
-   <div class="content">
-   	<div id="first" class="tab-content active">
-       <h3>我的家</h3>
-       <div class="first-grid">
-         <img src="封面.jpg" alt="封面">
-       </div>
-    </div>
-     <div id="photo" class="tab-content">
-       <h3>照片展示</h3>
-       <div class="photo-grid">
-         <img src="照片1.jpg" alt="照片1">
-         <img src="照片2.jpg" alt="照片2">
-         <img src="照片3.jpg" alt="照片3">
-         <img src="照片4.jpg" alt="照片4">
-         <img src="照片5.jpg" alt="照片5">
-         <img src="照片6.jpg" alt="照片6">
-         <img src="照片7.jpg" alt="照片7">
-         <img src="照片8.jpg" alt="照片8">
-       </div>
-     </div>
-     <!-- 视频内容 -->
-     <div id="video" class="tab-content">
-       <h3>有趣瞬间</h3>
-       <div class="video-box">
-         <video controls>
-           <source src="01.mp4" type="video/mp4">
-           您的浏览器不支持视频播放
-         </video>
-         <video controls>
-            <source src="02.mp4" type="video/mp4">
-                    您的浏览器不支持视频播放
-         </video>
-       </div>
-     </div>
-   </div>
-   <script>
-     // 点击切换
-     const firsts = document.querySelectorAll('.tab-first');
-     const btns = document.querySelectorAll('.tab-btn');
-     const contents = document.querySelectorAll('.tab-content');
-     btns.forEach(btn => {
-         btn.addEventListener('click', () => {
-         // 移除所有激活状态
-         firsts.forEach(f => f.classList.remove('active'));
-         btns.forEach(b => b.classList.remove('active'));
-         contents.forEach(c => c.classList.remove('active'));
-         // 当前激活
-         btn.classList.add('active');
-         const tab = btn.getAttribute('data-tab');
-         document.getElementById(tab).classList.add('active');
-       });
-     });
-   </script>
+  <!-- 链接 -->
+  <a href="https://www.baidu.com" target="_blank">去百度</a>
+  <br><br>
+
+  <!-- 图片 -->
+  <img src="https://picsum.photos/200/100" alt="随机图片" width="200">
+  <br><br>
+
+  <!-- 无序列表 -->
+  <h3>我的导航</h3>
+  <ul>
+    <li>首页</li>
+    <li>博客</li>
+    <li>作品集</li>
+  </ul>
+
+  <!-- 有序列表 -->
+  <h3>学习计划</h3>
+  <ol>
+    <li>HTML</li>
+    <li>CSS</li>
+    <li>JavaScript</li>
+  </ol>
+  <h2>我的主页</h2>
+<ol>
+	<li>首页</li>
+	<li>一</li>
+	<li>二</li>
+	<li>三</li>
+	<li>四</li>
+	<li>五</li>
+	<li>六</li>	
+</ol>
 </body>
 </html>
-
-
-
