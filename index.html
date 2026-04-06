@@ -1,497 +1,492 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>家庭相册</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:#f7f5f2;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#222}
-
-.login{position:fixed;inset:0;background:#f1ede5;display:flex;align-items:center;justify-content:center}
-.login-box{background:#fff;padding:40px;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,0.07);max-width:380px;width:90%;text-align:center}
-.login-box h2{font-size:24px;margin-bottom:8px}
-.login-box p{color:#888;margin-bottom:24px}
-#password{width:100%;padding:18px 16px;border:1px solid #ddd;border-radius:12px;font-size:16px;outline:none}
-#enterBtn{width:100%;padding:14px;background:#7a9777;color:#fff;border:none;border-radius:12px;font-size:16px;cursor:pointer;margin-top:10px}
-
-.header{display:none;padding:26px 20px;text-align:center;background:#fff;border-bottom:1px solid #eee}
-.header h1{font-size:26px}
-.header p{color:#999;margin-top:6px}
-
-.album{display:none;max-width:1200px;margin:0 auto;padding:30px 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:24px}
-.card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.05)}
-.card img{width:100%;height:220px;object-fit:contain;background:#e6d2b9;cursor:pointer}
-.info{padding:16px}
-.title{font-size:20px;margin-bottom:4px;line-height:1.3;}
-.desc{font-size:14px;color:#777}
-
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:999}
-.close{position:absolute;top:20px;right:30px;color:#fff;font-size:40px;cursor:pointer;z-index:100}
-
-.slider{
-  width:100%;
-  height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  position:relative;
-}
-#showImg{
-  max-width:90%;
-  max-height:90vh;
-  object-fit:contain;
-  cursor:grab;
-  user-select:none;
-}
-#showImg:active{
-  cursor:grabbing;
-}
-
-.arrow{
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  font-size:36px;
-  color:#fff;
-  background:rgba(255,255,255,.1);
-  padding:10px 20px;
-  border-radius:8px;
-  cursor:pointer;
-  z-index:10;
-}
-.arrow.prev{left:20px}
-.arrow.next{right:20px}
-
-.slide-info{
-  position:absolute;
-  bottom:60px;
-  left:50%;
-  transform:translateX(-50%);
-  color:#fff;
-  background:rgba(0,0,0,.5);
-  padding:12px 24px;
-  border-radius:12px;
-  text-align:center;
-  font-size:26px;
-  z-index:5;
-}
-</style>
-</head>
-
-<body>
-<div class="login" id="loginPage">
-  <div class="login-box">
-    <h2>家庭相册</h2>
-    <p>输入密码查看</p >
-    <input type="password" id="password" placeholder="请输入密码">
-    <button id="enterBtn">进入相册</button>
-  </div>
-</div>
-
-<div class="header" id="head">
-  <h1>温馨家庭相册</h1>
-  <p>记录美好瞬间</p >
-</div>
-
-<div class="album" id="album"></div>
-
-<div class="modal" id="modal">
-  <span class="close">&times;</span>
-  <div class="slider">
-    <div class="arrow prev" onclick="prev()">&lt;</div>
-    <img id="showImg">
-    <div class="arrow next" onclick="next()">&gt;</div>
-    <div class="slide-info" id="slideInfo"></div>
-  </div>
-</div>
-
-<script>
-const PASSWORD = "jiating2026";
-let cards = [];
-let current = 0;
-let scale = 1;
-const scaleStep = 0.1;
-let isDragging = false;
-let startX = 0, startY = 0;
-let translateX = 0, translateY = 0;
-const photoTitles = [
-"来到妈妈肚子里",
-"妈妈怀孕七个月",
-"妈妈怀孕九个月，妈妈又幸福又辛苦",
-"出生广东省妇幼保健院",
-"第一张姓名牌小脚丫",
-"小手",
-"爸爸到广州照顾宝宝",
-"广州和哥哥一起",
-"睡得很香",
-"我满月啦",
-"满月的我很开心",
-"在御口福饭店庆祝你满月啦好热闹",
-"第一次抬头",
-"第一次打预防针好刺激忘记哭，一分钟后才觉得好痛",
-"我没事喜欢吐泡泡玩",
-"第一次上超市好奇宝宝",
-"终于熟练抬头，兴奋得像赢得冠军感觉",
-"在妈妈怀里睡就是踏实",
-"妈妈说宝贝要晒太阳去黄疸，奶奶带我在院子里晒太阳",
-"我在用力拉粑粑！",
-"第一次去越秀公园玩，我们还坐了地铁",
-"第一次去越秀公园玩，我们还坐了地铁",
-"第一次去越秀公园玩，我们还坐了地铁",
-"第一次去越秀公园玩，我们还坐了地铁",
-"妈妈给你买玩具躺椅方便奶奶做饭你躺着玩",
-"下暴雨了，妈妈和奶奶还是坚持骑电动车带你打预防针",
-"带你去广州博物馆",
-"带你去广州博物馆",
-"妈妈一边看店一边给你喂母乳，奶奶每隔一会带你在店里周围玩",
-"我在店里躺着",
-"我在购物车里玩",
-"奶奶在照顾我",
-"漂亮巧克力阿姨好喜欢抱你玩",
-"平时你是在这张椅子上睡觉",
-"带奶奶第一次去吃寿司",
-"你好喜欢咬手指玩",
-"你好喜欢咬手指玩",
-"疼爱你的小玲阿姨",
-"到花都雪娥阿姨家，大你三天的可乐哥哥",
-"在家游泳",
-"玩玩具",
-"躺着玩耍",
-"摇摇铃",
-"和妈妈一起玩",
-"一起拍照开心",
-"看我是个小熊熊",
-"小熊熊很开心",
-"奶奶带我外出",
-"奶奶生日",
-"看我玩书",
-"看我销魂的躺姿",
-"宝宝不开心",
-"妈妈奶奶一起外出happy",
-"看我帅不帅",
-"小姨嗑瓜子很开心",
-"妈妈说穿上睡袋就不冷了",
-"超市的小番茄我只能舔一舔",
-"躺着安逸",
-"我们家小姨买了很多鲜花",
-"我们家小姨买了很多鲜花",
-"和奶奶在看花",
-"看我刷彩虹圈",
-"好好吃的棉花糖",
-"宝宝不开心",
-"这只袜子穿着不舒服",
-"太困了睡着",
-"每天又哭又笑的",
-"益鑫哥哥带我玩",
-"母子桥边风景",
-"看我磨牙好得劲",
-"洗澡帅不帅",
-"来到大姑妈店里玩",
-"来到大姑妈店里玩",
-"来到大姑妈店里玩",
-"大姑妈给的红包开心",
-"大姑妈给红包就是开心",
-"易宏哥哥抱我",
-"和小舅舅家的大女儿张馨悦姐姐合影，开心！",
-"咦我看见宝贝了",
-"看我开的路虎",
-"和益鑫的姐姐玩耍",
-"开心呀",
-"这不是我小时候玩的摇铃吗",
-"看我晒不晒",
-"看我弹钢琴",
-"我的任性熊看着不错",
-"我的任性熊看着就是帅",
-"这个姐姐有点凶",
-"外婆陪我玩",
-"外婆和妈妈",
-"小姨姐姐和外婆",
-"在外婆家门口",
-"和外婆外公合影",
-"咦路边有100元钱",
-"回到洋里老家啦",
-"爸爸给我准备的小家",
-"爸爸陪我玩",
-"这是谁啊太搞笑了",
-"让我看看柜子里面有什么",
-"我喜欢的桔子",
-"稻田原来长这样",
-"谁家的玩具太拉风了",
-"还是手指味道得劲",
-"这根黑线是什么",
-"我在楼梯上玩",
-"去梧溪玩",
-"看我帽子是不是很有型",
-"奶奶生日啦",
-"哥哥和爸爸一起公园玩耍",
-"在梧溪玩的很开心",
-"在梧溪和大奶奶叔公他们一起",
-"我家的茶桌",
-"妈妈爱美中",
-"妈妈和奶奶",
-"看我洗青菜",
-"我其实很晒",
-"带上帽子更晒",
-"妈妈说喜欢这个帽子",
-"妈妈放假回来看我在享受桔子美味",
-"我自己试下能不能包橘子皮",
-"爷爷带我玩竹竿",
-"洗澡时能不能来一口呢",
-"我在公园溜滑梯",
-"椰子原来长这样",
-"凤山公园的石头条",
-"看我这顶帽子帅不帅",
-"哇发财了，这么多的玉米",
-"看我开车",
-"阳光浴原来也不错",
-"看我是不是越来越晒",
-"去菜地里摘青菜",
-"爸爸带我去田野看牛",
-"路边的野花很漂亮",
-"路边野花很香",
-"哥哥看我骑自行",
-"看我给妈妈洗头",
-"爸爸和哥哥一起玩耍",
-"我骑的这头是怪兽吗",
-"妈妈买的浴桶可以游泳",
-"和隔壁妹妹一起玩",
-"一家人聚餐",
-"一家人去万家游泳聚餐",
-"好像很好吃",
-"看我跳舞晒不晒",
-"凤山公园石头条好玩",
-"这个床怎么还能变形",
-"看我叠高高",
-"喜欢这个车",
-"看小猪佩奇",
-"洗澡中晒吗",
-"安仁看樱花",
-"在干嘛",
-"爸爸臭美中",
-"风景还不错",
-"这个妈妈有点漂亮",
-"看我上镜吗",
-"我的一家",
-"小鹿的帽子嘻嘻",
-"我还蛮上镜的嘛",
-"这么多大烟花我第一次见耶",
-"和哥哥一起放烟花",
-"和哥哥浩浩一起",
-"我们一起吃饭",
-"其实我喜欢烟花壳",
-"发现烟花壳",
-"和哥哥分享花生牛奶美味",
-"旅游吃零食爽",
-"大姑妈的玩具到手",
-"奥特曼家庭套装",
-"阿婆家沙发",
-"广州滑滑梯",
-"广州露天水塘",
-"广州露天水塘捕鱼",
-"广州露天水塘捞鱼",
-"大姑妈店里玩具区",
-"阿婆家对面公园",
-"阿婆家人们",
-"我和外婆家人们",
-"幼儿园老师发的别致的帽子",
-"花桥凤山上玩沙子",
-"这个植物第一次看见",
-"看我晒不晒",
-"卡片总是那么好玩",
-"爸爸买的新玩具",
-"看我像不像国王",
-"好像我长高了",
-"自己干饭才香",
-"爸爸的手工国王帽子",
-"和哥哥安仁采摘葡萄",
-"看樱花",
-"安仁的樱花不错",
-"甘蔗万家游泳池",
-"学游泳中",
-"我是来泡水的",
-"自助餐冰淇淋香甜",
-"好像吃不够",
-"爸爸妈妈",
-"泡水洗脚",
-"干饭中",
-"喜欢亲大人的肉肉",
-"我的手骨折了",
-"我喜欢盒子",
-"新衣服放了好久",
-"我喜欢路锥",
-"这个烟花有点炫",
-"看我炫不炫",
-"烟花的壳更好玩",
-"篮球场最好玩",
-"哥哥在奋力骑自行车",
-"高速口花园",
-"我喜欢搞怪",
-"开火车",
-"看上去我好小",
-"妈妈臭美中",
-"这个孔雀开屏烟花还不错",
-"妈妈生日我喜欢蛋糕",
-"一起过生日",
-"发现丝瓜壳挺好玩",
-"看我顶",
-"新玩具恐龙挖宝",
-"正在挖宝中",
-"达达哥小时候"
-];
-
-// 自动根据数组长度生成相册，不限数量
-const albumEl = document.getElementById("album");
-for (let i = 0; i < photoTitles.length; i++) {
-  const card = document.createElement("div");
-  card.className = "card";
-  const title = photoTitles[i] || `照片 ${i+1}`;
-  card.innerHTML = `
-    <img src="${i+1}.jpg">
-    <div class="info">
-      <div class="title">${title}</div>
-      <div class="desc">家庭相册</div>
-    </div>
-  `;
-  albumEl.appendChild(card);
-  cards.push(card);
-}
-
-enterBtn.onclick = function(){
-  if(password.value === PASSWORD){
-    loginPage.style.display = "none";
-    head.style.display = "block";
-    album.style.display = "grid";
-  }else{
-    alert("密码错误");
-  }
-};
-
-album.onclick = function(e){
-  const img = e.target.closest(".card img");
-  if(!img) return;
-  const card = img.closest(".card");
-  current = cards.indexOf(card);
-  modal.style.display = "flex";
-  scale = 1;
-  translateX = 0;
-  translateY = 0;
-  updateTransform();
-  render();
-};
-
-function render(){
-  const card = cards[current];
-  showImg.src = card.querySelector("img").src;
-  slideInfo.innerText = card.querySelector(".title").innerText;
-}
-
-function prev(){
-  current = (current - 1 + cards.length) % cards.length;
-  scale = 1;
-  translateX = 0;
-  translateY = 0;
-  updateTransform();
-  render();
-}
-function next(){
-  current = (current + 1) % cards.length;
-  scale = 1;
-  translateX = 0;
-  translateY = 0;
-  updateTransform();
-  render();
-}
-
-function closeModal(){
-  modal.style.display = "none";
-}
-document.querySelector(".close").onclick = closeModal;
-modal.onclick = (e) => e.target === modal && closeModal();
-
-document.onkeydown = (e) => {
-  if(e.key === "Escape") closeModal();
-  if(modal.style.display !== "none"){
-    e.key === "ArrowLeft" && prev();
-    e.key === "ArrowRight" && next();
-  }
-};
-
-function updateTransform(){
-  showImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
-}
-
-// ==================== 手机滑动修复 ====================
-let touchStartX = 0;
-const slider = document.querySelector('.slider');
-
-slider.addEventListener('touchstart', (e) => {
-  touchStartX = e.changedTouches[0].clientX;
-}, { passive: true });
-
-slider.addEventListener('touchend', (e) => {
-  if(scale !== 1) return;
-  const diff = e.changedTouches[0].clientX - touchStartX;
-//if(Math.abs(diff)>40){
-    diff > 0 ? prev() : next();
-//}
-}, { passive: true });
-
-// ==================== PC双击放大 ====================
-showImg.addEventListener('dblclick', () => {
-  scale = scale === 1 ? 1.8 : 1;
-  if(scale === 1){
-    translateX = 0;
-    translateY = 0;
-  }
-  updateTransform();
-});
-
-// ==================== 滚轮缩放 ====================
-showImg.addEventListener('wheel', (e) => {
-  e.preventDefault();
-  scale += e.deltaY < 0 ? scaleStep : -scaleStep;
-  scale = Math.max(1, Math.min(scale, 3));
-  updateTransform();
-}, { passive: false });
-
-// ==================== 放大后拖动查看 ====================
-showImg.addEventListener('mousedown', (e) => {
-  if(scale <= 1) return;
-  isDragging = true;
-  startX = e.clientX;
-  startY = e.clientY;
-  e.preventDefault();
-});
-
-window.addEventListener('mousemove', (e) => {
-  if(!isDragging) return;
-  const dx = e.clientX - startX;
-  const dy = e.clientY - startY;
-  translateX += dx;
-  translateY += dy;
-  startX = e.clientX;
-  startY = e.clientY;
-  updateTransform();
-});
-
-window.addEventListener('mouseup', () => {
-  isDragging = false;
-});
-
-// ==================== 正常状态拖动切换 ====================
-slider.addEventListener('mousedown', (e) => {
-  if(scale > 1) return;
-  startX = e.clientX;
-});
-
-slider.addEventListener('mouseup', (e) => {
-  if(scale > 1) return;
-  const diff = e.clientX - startX;
-  if(Math.abs(diff) > 60){
-    diff > 0 ? prev() : next();
-  }
-});
-</script>
-</body>
-</html>
+ <html lang="zh-CN">
+ <head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>家庭相册</title>
+ <style>
+ *{box-sizing:border-box;margin:0;padding:0}
+ body{background:#f7f5f2;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#222}
+ .login{position:fixed;inset:0;background:#f1ede5;display:flex;align-items:center;justify-content:center}
+ .login-box{background:#fff;padding:40px;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,0.07);max-width:380px;width:90%;text-align:center}
+ .login-box h2{font-size:24px;margin-bottom:8px}
+ .login-box p{color:#888;margin-bottom:24px}
+ #password{width:100%;padding:18px 16px;border:1px solid #ddd;border-radius:12px;font-size:16px;outline:none}
+ #enterBtn{width:100%;padding:14px;background:#7a9777;color:#fff;border:none;border-radius:12px;font-size:16px;cursor:pointer;margin-top:10px}
+ .header{display:none;padding:26px 20px;text-align:center;background:#fff;border-bottom:1px solid #eee}
+ .header h1{font-size:26px}
+ .header p{color:#999;margin-top:6px}
+ .album{display:none;max-width:1200px;margin:0 auto;padding:30px 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:24px}
+ .card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.05)}
+ .card img{width:100%;height:220px;object-fit:contain;background:#e6d2b9;cursor:pointer}
+ .info{padding:16px}
+ .title{font-size:20px;margin-bottom:4px;line-height:1.3;}
+ .desc{font-size:14px;color:#777}
+ .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:999}
+ .close{position:absolute;top:20px;right:30px;color:#fff;font-size:40px;cursor:pointer;z-index:100}
+ .slider{
+   width:100%;
+   height:100vh;
+   display:flex;
+   align-items:center;
+   justify-content:center;
+   position:relative;
+ }
+ #showImg{
+   max-width:90%;
+   max-height:90vh;
+   object-fit:contain;
+   cursor:grab;
+   user-select:none;
+ }
+ #showImg:active{
+   cursor:grabbing;
+ }
+ .arrow{
+   position:absolute;
+   top:50%;
+   transform:translateY(-50%);
+   font-size:36px;
+   color:#fff;
+   background:rgba(255,255,255,.1);
+   padding:10px 20px;
+   border-radius:8px;
+   cursor:pointer;
+   z-index:10;
+ }
+ .arrow.prev{left:20px}
+ .arrow.next{right:20px}
+ .slide-info{
+   position:absolute;
+   bottom:60px;
+   left:50%;
+   transform:translateX(-50%);
+   color:#fff;
+   background:rgba(0,0,0,.5);
+   padding:12px 24px;
+   border-radius:12px;
+   text-align:center;
+   font-size:26px;
+   z-index:5;
+ }
+ </style>
+ </head>
+ <body>
+ <div class="login" id="loginPage">
+   <div class="login-box">
+     <h2>家庭相册</h2>
+     <p>输入密码查看</p >
+     <input type="password" id="password" placeholder="请输入密码">
+     <button id="enterBtn">进入相册</button>
+   </div>
+ </div>
+ <div class="header" id="head">
+   <h1>温馨家庭相册</h1>
+   <p>记录美好瞬间</p >
+ </div>
+ <div class="album" id="album"></div>
+ <div class="modal" id="modal">
+   <span class="close">&times;</span>
+   <div class="slider">
+     <div class="arrow prev">&lt;</div>
+     <img id="showImg">
+     <div class="arrow next">&gt;</div>
+     <div class="slide-info" id="slideInfo"></div>
+   </div>
+ </div>
+ <script>
+ const PASSWORD = "jiating2026";
+ let cards = [];
+ let current = 0;
+ let scale = 1;
+ const scaleStep = 0.1;
+ let isDragging = false;
+ let startX = 0, startY = 0;
+ let translateX = 0, translateY = 0;
+ const photoTitles = [
+ "来到妈妈肚子里",
+ "妈妈怀孕七个月",
+ "妈妈怀孕九个月，妈妈又幸福又辛苦",
+ "出生广东省妇幼保健院",
+ "第一张姓名牌小脚丫",
+ "小手",
+ "爸爸到广州照顾宝宝",
+ "广州和哥哥一起",
+ "睡得很香",
+ "我满月啦",
+ "满月的我很开心",
+ "在御口福饭店庆祝你满月啦好热闹",
+ "第一次抬头",
+ "第一次打预防针好刺激忘记哭，一分钟后才觉得好痛",
+ "我没事喜欢吐泡泡玩",
+ "第一次上超市好奇宝宝",
+ "终于熟练抬头，兴奋得像赢得冠军感觉",
+ "在妈妈怀里睡就是踏实",
+ "妈妈说宝贝要晒太阳去黄疸，奶奶带我在院子里晒太阳",
+ "我在用力拉粑粑！",
+ "第一次去越秀公园玩，我们还坐了地铁",
+ "第一次去越秀公园玩，我们还坐了地铁",
+ "第一次去越秀公园玩，我们还坐了地铁",
+ "第一次去越秀公园玩，我们还坐了地铁",
+ "妈妈给你买玩具躺椅方便奶奶做饭你躺着玩",
+ "下暴雨了，妈妈和奶奶还是坚持骑电动车带你打预防针",
+ "带你去广州博物馆",
+ "带你去广州博物馆",
+ "妈妈一边看店一边给你喂母乳，奶奶每隔一会带你在店里周围玩",
+ "我在店里躺着",
+ "我在购物车里玩",
+ "奶奶在照顾我",
+ "漂亮巧克力阿姨好喜欢抱你玩",
+ "平时你是在这张椅子上睡觉",
+ "带奶奶第一次去吃寿司",
+ "你好喜欢咬手指玩",
+ "你好喜欢咬手指玩",
+ "疼爱你的小玲阿姨",
+ "到花都雪娥阿姨家，大你三天的可乐哥哥",
+ "在家游泳",
+ "玩玩具",
+ "躺着玩耍",
+ "摇摇铃",
+ "和妈妈一起玩",
+ "一起拍照开心",
+ "看我是个小熊熊",
+ "小熊熊很开心",
+ "奶奶带我外出",
+ "奶奶生日",
+ "看我玩书",
+ "看我销魂的躺姿",
+ "宝宝不开心",
+ "妈妈奶奶一起外出happy",
+ "看我帅不帅",
+ "小姨嗑瓜子很开心",
+ "妈妈说穿上睡袋就不冷了",
+ "超市的小番茄我只能舔一舔",
+ "躺着安逸",
+ "我们家小姨买了很多鲜花",
+ "我们家小姨买了很多鲜花",
+ "和奶奶在看花",
+ "看我刷彩虹圈",
+ "好好吃的棉花糖",
+ "宝宝不开心",
+ "这只袜子穿着不舒服",
+ "太困了睡着",
+ "每天又哭又笑的",
+ "益鑫哥哥带我玩",
+ "母子桥边风景",
+ "看我磨牙好得劲",
+ "洗澡帅不帅",
+ "来到大姑妈店里玩",
+ "来到大姑妈店里玩",
+ "来到大姑妈店里玩",
+ "大姑妈给的红包开心",
+ "大姑妈给红包就是开心",
+ "易宏哥哥抱我",
+ "和小舅舅家的大女儿张馨悦姐姐合影，开心！",
+ "咦我看见宝贝了",
+ "看我开的路虎",
+ "和益鑫的姐姐玩耍",
+ "开心呀",
+ "这不是我小时候玩的摇铃吗",
+ "看我晒不晒",
+ "看我弹钢琴",
+ "我的任性熊看着不错",
+ "我的任性熊看着就是帅",
+ "这个姐姐有点凶",
+ "外婆陪我玩",
+ "外婆和妈妈",
+ "小姨姐姐和外婆",
+ "在外婆家门口",
+ "和外婆外公合影",
+ "咦路边有100元钱",
+ "回到洋里老家啦",
+ "爸爸给我准备的小家",
+ "爸爸陪我玩",
+ "这是谁啊太搞笑了",
+ "让我看看柜子里面有什么",
+ "我喜欢的桔子",
+ "稻田原来长这样",
+ "谁家的玩具太拉风了",
+ "还是手指味道得劲",
+ "这根黑线是什么",
+ "我在楼梯上玩",
+ "去梧溪玩",
+ "看我帽子是不是很有型",
+ "奶奶生日啦",
+ "哥哥和爸爸一起公园玩耍",
+ "在梧溪玩的很开心",
+ "在梧溪和大奶奶叔公他们一起",
+ "我家的茶桌",
+ "妈妈爱美中",
+ "妈妈和奶奶",
+ "看我洗青菜",
+ "我其实很晒",
+ "带上帽子更晒",
+ "妈妈说喜欢这个帽子",
+ "妈妈放假回来看我在享受桔子美味",
+ "我自己试下能不能包橘子皮",
+ "爷爷带我玩竹竿",
+ "洗澡时能不能来一口呢",
+ "我在公园溜滑梯",
+ "椰子原来长这样",
+ "凤山公园的石头条",
+ "看我这顶帽子帅不帅",
+ "哇发财了，这么多的玉米",
+ "看我开车",
+ "阳光浴原来也不错",
+ "看我是不是越来越晒",
+ "去菜地里摘青菜",
+ "爸爸带我去田野看牛",
+ "路边的野花很漂亮",
+ "路边野花很香",
+ "哥哥看我骑自行",
+ "看我给妈妈洗头",
+ "爸爸和哥哥一起玩耍",
+ "我骑的这头是怪兽吗",
+ "妈妈买的浴桶可以游泳",
+ "和隔壁妹妹一起玩",
+ "一家人聚餐",
+ "一家人去万家游泳聚餐",
+ "好像很好吃",
+ "看我跳舞晒不晒",
+ "凤山公园石头条好玩",
+ "这个床怎么还能变形",
+ "看我叠高高",
+ "喜欢这个车",
+ "看小猪佩奇",
+ "洗澡中晒吗",
+ "安仁看樱花",
+ "在干嘛",
+ "爸爸臭美中",
+ "风景还不错",
+ "这个妈妈有点漂亮",
+ "看我上镜吗",
+ "我的一家",
+ "小鹿的帽子嘻嘻",
+ "我还蛮上镜的嘛",
+ "这么多大烟花我第一次见耶",
+ "和哥哥一起放烟花",
+ "和哥哥浩浩一起",
+ "我们一起吃饭",
+ "其实我喜欢烟花壳",
+ "发现烟花壳",
+ "和哥哥分享花生牛奶美味",
+ "旅游吃零食爽",
+ "大姑妈的玩具到手",
+ "奥特曼家庭套装",
+ "阿婆家沙发",
+ "广州滑滑梯",
+ "广州露天水塘",
+ "广州露天水塘捕鱼",
+ "广州露天水塘捞鱼",
+ "大姑妈店里玩具区",
+ "阿婆家对面公园",
+ "阿婆家人们",
+ "我和外婆家人们",
+ "幼儿园老师发的别致的帽子",
+ "花桥凤山上玩沙子",
+ "这个植物第一次看见",
+ "看我晒不晒",
+ "卡片总是那么好玩",
+ "爸爸买的新玩具",
+ "看我像不像国王",
+ "好像我长高了",
+ "自己干饭才香",
+ "爸爸的手工国王帽子",
+ "和哥哥安仁采摘葡萄",
+ "看樱花",
+ "安仁的樱花不错",
+ "甘蔗万家游泳池",
+ "学游泳中",
+ "我是来泡水的",
+ "自助餐冰淇淋香甜",
+ "好像吃不够",
+ "爸爸妈妈",
+ "泡水洗脚",
+ "干饭中",
+ "喜欢亲大人的肉肉",
+ "我的手骨折了",
+ "我喜欢盒子",
+ "新衣服放了好久",
+ "我喜欢路锥",
+ "这个烟花有点炫",
+ "看我炫不炫",
+ "烟花的壳更好玩",
+ "篮球场最好玩",
+ "哥哥在奋力骑自行车",
+ "高速口花园",
+ "我喜欢搞怪",
+ "开火车",
+ "看上去我好小",
+ "妈妈臭美中",
+ "这个孔雀开屏烟花还不错",
+ "妈妈生日我喜欢蛋糕",
+ "一起过生日",
+ "发现丝瓜壳挺好玩",
+ "看我顶",
+ "新玩具恐龙挖宝",
+ "正在挖宝中",
+ "达达哥小时候"
+ ];
+ // 生成相册
+ const albumEl = document.getElementById("album");
+ for (let i = 0; i < photoTitles.length; i++) {
+   const card = document.createElement("div");
+   card.className = "card";
+   const title = photoTitles[i] || `照片 ${i+1}`;
+   card.innerHTML = `
+     <img src="${i+1}.jpg">
+     <div class="info">
+       <div class="title">${title}</div>
+       <div class="desc">家庭相册</div>
+     </div>
+   `;
+   albumEl.appendChild(card);
+   cards.push(card);
+ }
+ // 登录
+ enterBtn.onclick = function(){
+   if(password.value === PASSWORD){
+     loginPage.style.display = "none";
+     head.style.display = "block";
+     album.style.display = "grid";
+   }else{
+     alert("密码错误");
+   }
+ };
+ // 打开大图
+ album.onclick = function(e){
+   const img = e.target.closest(".card img");
+   if(!img) return;
+   const card = img.closest(".card");
+   current = cards.indexOf(card);
+   modal.style.display = "flex";
+   scale = 1;
+   translateX = 0;
+   translateY = 0;
+   updateTransform();
+   render();
+ };
+ // 渲染当前图
+ function render(){
+   const card = cards[current];
+   showImg.src = card.querySelector("img").src;
+   slideInfo.innerText = card.querySelector(".title").innerText;
+ }
+ // 上一张
+ function prev(){
+   current = (current - 1 + cards.length) % cards.length;
+   scale = 1;
+   translateX = 0;
+   translateY = 0;
+   updateTransform();
+   render();
+ }
+ // 下一张
+ function next(){
+   current = (current + 1) % cards.length;
+   scale = 1;
+   translateX = 0;
+   translateY = 0;
+   updateTransform();
+   render();
+ }
+ // 关闭模态
+ function closeModal(){
+   modal.style.display = "none";
+ }
+ document.querySelector(".close").onclick = closeModal;
+ modal.onclick = (e) => e.target === modal && closeModal();
+ // 键盘控制
+ document.onkeydown = (e) => {
+   if(e.key === "Escape") closeModal();
+   if(modal.style.display !== "none"){
+     if(e.key === "ArrowLeft") prev();
+     if(e.key === "ArrowRight") next();
+   }
+ };
+ // 按钮绑定（修复点1：单独绑定，不写在行内）
+ document.querySelector('.arrow.prev').addEventListener('click', (e) => {
+   e.stopPropagation();
+   prev();
+ });
+ document.querySelector('.arrow.next').addEventListener('click', (e) => {
+   e.stopPropagation();
+   next();
+ });
+ function updateTransform(){
+   showImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+ }
+ // 手机滑动
+ let touchStartX = 0;
+ const slider = document.querySelector('.slider');
+ slider.addEventListener('touchstart', (e) => {
+   touchStartX = e.changedTouches[0].clientX;
+ }, { passive: true });
+ slider.addEventListener('touchend', (e) => {
+   if(scale !== 1) return;
+   const diff = e.changedTouches[0].clientX - touchStartX;
+   if(Math.abs(diff) > 40){
+     diff > 0 ? prev() : next();
+   }
+ }, { passive: true });
+ // 双击放大
+ showImg.addEventListener('dblclick', () => {
+   scale = scale === 1 ? 1.8 : 1;
+   if(scale === 1){
+     translateX = 0;
+     translateY = 0;
+   }
+   updateTransform();
+ });
+ // 滚轮缩放
+ showImg.addEventListener('wheel', (e) => {
+   e.preventDefault();
+   scale += e.deltaY < 0 ? scaleStep : -scaleStep;
+   scale = Math.max(1, Math.min(scale, 3));
+   updateTransform();
+ }, { passive: false });
+ // 放大后拖动
+ showImg.addEventListener('mousedown', (e) => {
+   if(scale <= 1) return;
+   isDragging = true;
+   startX = e.clientX;
+   startY = e.clientY;
+   e.preventDefault();
+ });
+ window.addEventListener('mousemove', (e) => {
+   if(!isDragging) return;
+   const dx = e.clientX - startX;
+   const dy = e.clientY - startY;
+   translateX += dx;
+   translateY += dy;
+   startX = e.clientX;
+   startY = e.clientY;
+   updateTransform();
+ });
+ window.addEventListener('mouseup', () => {
+   isDragging = false;
+ });
+ // 修复点2：给 slider 拖动加标记，避免按钮点击被误判为拖动
+ let isSliderDrag = false;
+ slider.addEventListener('mousedown', (e) => {
+   if(scale > 1) return;
+   isSliderDrag = true;
+   startX = e.clientX;
+ });
+ slider.addEventListener('mousemove', (e) => {
+   if(!isSliderDrag || scale > 1) return;
+ });
+ slider.addEventListener('mouseup', (e) => {
+   if(!isSliderDrag || scale > 1) return;
+   isSliderDrag = false;
+   const diff = e.clientX - startX;
+   if(Math.abs(diff) > 60){
+     diff > 0 ? prev() : next();
+   }
+ });
+ slider.addEventListener('mouseleave', () => {
+   isSliderDrag = false;
+ });
+ </script>
+ </body>
+ </html>
