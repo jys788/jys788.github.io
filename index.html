@@ -110,13 +110,11 @@ body{background:#f7f5f2;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",
 const PASSWORD = "jiating2026";
 let cards = [];
 let current = 0;
-
 let scale = 1;
 const scaleStep = 0.1;
 let isDragging = false;
 let startX = 0, startY = 0;
 let translateX = 0, translateY = 0;
-
 const photoTitles = [
 "来到妈妈肚子里",
 "妈妈怀孕七个月",
@@ -434,7 +432,7 @@ slider.addEventListener('touchstart', (e) => {
 slider.addEventListener('touchend', (e) => {
   if(scale !== 1) return;
   const diff = e.changedTouches[0].clientX - touchStartX;
-  if(Math.abs(diff) > 40){
+  if(Math.abs(diff) > 20){
     diff > 0 ? prev() : next();
   }
 }, { passive: true });
