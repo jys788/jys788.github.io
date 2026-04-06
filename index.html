@@ -432,7 +432,7 @@ slider.addEventListener('touchstart', (e) => {
 slider.addEventListener('touchend', (e) => {
   if(scale !== 1) return;
   const diff = e.changedTouches[0].clientX - touchStartX;
-  if(Math.abs(diff) > 20){
+  if(Math.abs(diff)>10){
     diff > 0 ? prev() : next();
   }
 }, { passive: true });
