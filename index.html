@@ -27,7 +27,7 @@ body{background:#f7f5f2;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",
 .desc{font-size:14px;color:#777}
 
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:999}
-.close{position:absolute;top:20px;right:30px;color:#fff;font-size:40px;cursor:pointer;z-index:10}
+.close{position:absolute;top:20px;right:30px;color:#fff;font-size:40px;cursor:pointer;z-index:100}
 
 .slider{
   width:100%;
@@ -36,7 +36,6 @@ body{background:#f7f5f2;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",
   align-items:center;
   justify-content:center;
   position:relative;
-  overflow:hidden;
 }
 #showImg{
   max-width:90%;
@@ -44,16 +43,39 @@ body{background:#f7f5f2;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",
   object-fit:contain;
   cursor:grab;
   user-select:none;
-  transition:transform 0.2s ease;
 }
 #showImg:active{
   cursor:grabbing;
 }
 
-.arrow{position:absolute;top:50%;transform:translateY(-50%);font-size:36px;color:#fff;background:rgba(255,255,255,.1);padding:10px 20px;border-radius:8px;cursor:pointer}
+.arrow{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:36px;
+  color:#fff;
+  background:rgba(255,255,255,.1);
+  padding:10px 20px;
+  border-radius:8px;
+  cursor:pointer;
+  z-index:10;
+}
 .arrow.prev{left:20px}
 .arrow.next{right:20px}
-.slide-info{position:absolute;bottom:60px;left:50%;transform:translateX(-50%);color:#fff;background:rgba(0,0,0,.5);padding:12px 24px;border-radius:12px;text-align:center;font-size:26px;}
+
+.slide-info{
+  position:absolute;
+  bottom:60px;
+  left:50%;
+  transform:translateX(-50%);
+  color:#fff;
+  background:rgba(0,0,0,.5);
+  padding:12px 24px;
+  border-radius:12px;
+  text-align:center;
+  font-size:26px;
+  z-index:5;
+}
 </style>
 </head>
 
@@ -89,16 +111,12 @@ const PASSWORD = "jiating2026";
 let cards = [];
 let current = 0;
 
-// 放大与拖动变量
 let scale = 1;
 const scaleStep = 0.1;
 let isDragging = false;
-let startX = 0;
-let startY = 0;
-let translateX = 0;
-let translateY = 0;
+let startX = 0, startY = 0;
+let translateX = 0, translateY = 0;
 
-// ====================== 照片标题数组（数量不限） ======================
 const photoTitles = [
 "来到妈妈肚子里",
 "妈妈怀孕七个月",
@@ -154,7 +172,7 @@ const photoTitles = [
 "宝宝不开心",
 "妈妈奶奶一起外出happy",
 "看我帅不帅",
-"看小姨嗑瓜子很开心",
+"小姨嗑瓜子很开心",
 "妈妈说穿上睡袋就不冷了",
 "超市的小番茄我只能舔一舔",
 "躺着安逸",
@@ -283,7 +301,7 @@ const photoTitles = [
 "这个植物第一次看见",
 "看我晒不晒",
 "卡片总是那么好玩",
-"看爸爸买的新玩具",
+"爸爸买的新玩具",
 "看我像不像国王",
 "好像我长高了",
 "自己干饭才香",
@@ -321,18 +339,17 @@ const photoTitles = [
 "看我顶",
 "新玩具恐龙挖宝",
 "正在挖宝中",
-"达哥哥小时候"
+"达达哥小时候"
 ];
 
-// ====================== 根据数组长度自动生成相册（不限数量） ======================
+// 自动根据数组长度生成相册，不限数量
 const albumEl = document.getElementById("album");
 for (let i = 0; i < photoTitles.length; i++) {
   const card = document.createElement("div");
   card.className = "card";
   const title = photoTitles[i] || `照片 ${i+1}`;
-  const imgSrc = `${i + 1}.jpg`; // 自动对应 1.jpg 2.jpg ...
   card.innerHTML = `
-    <img src="${imgSrc}">
+    <img src="${i+1}.jpg">
     <div class="info">
       <div class="title">${title}</div>
       <div class="desc">家庭相册</div>
@@ -342,19 +359,19 @@ for (let i = 0; i < photoTitles.length; i++) {
   cards.push(card);
 }
 
-enterBtn.onclick = function () {
-  if (password.value === PASSWORD) {
+enterBtn.onclick = function(){
+  if(password.value === PASSWORD){
     loginPage.style.display = "none";
     head.style.display = "block";
     album.style.display = "grid";
-  } else {
+  }else{
     alert("密码错误");
   }
 };
 
-album.onclick = function (e) {
+album.onclick = function(e){
   const img = e.target.closest(".card img");
-  if (!img) return;
+  if(!img) return;
   const card = img.closest(".card");
   current = cards.indexOf(card);
   modal.style.display = "flex";
@@ -365,13 +382,13 @@ album.onclick = function (e) {
   render();
 };
 
-function render() {
+function render(){
   const card = cards[current];
   showImg.src = card.querySelector("img").src;
   slideInfo.innerText = card.querySelector(".title").innerText;
 }
 
-function prev() {
+function prev(){
   current = (current - 1 + cards.length) % cards.length;
   scale = 1;
   translateX = 0;
@@ -379,7 +396,7 @@ function prev() {
   updateTransform();
   render();
 }
-function next() {
+function next(){
   current = (current + 1) % cards.length;
   scale = 1;
   translateX = 0;
@@ -388,26 +405,25 @@ function next() {
   render();
 }
 
-function closeModal() {
+function closeModal(){
   modal.style.display = "none";
 }
 document.querySelector(".close").onclick = closeModal;
 modal.onclick = (e) => e.target === modal && closeModal();
 
 document.onkeydown = (e) => {
-  if (e.key === "Escape") closeModal();
-  if (modal.style.display !== "none") {
+  if(e.key === "Escape") closeModal();
+  if(modal.style.display !== "none"){
     e.key === "ArrowLeft" && prev();
     e.key === "ArrowRight" && next();
   }
 };
 
-// 统一更新图片样式
-function updateTransform() {
+function updateTransform(){
   showImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
 }
 
-// ==================== 手机滑动切换 ====================
+// ==================== 手机滑动修复 ====================
 let touchStartX = 0;
 const slider = document.querySelector('.slider');
 
@@ -416,25 +432,24 @@ slider.addEventListener('touchstart', (e) => {
 }, { passive: true });
 
 slider.addEventListener('touchend', (e) => {
-  if (scale !== 1) return;
+  if(scale !== 1) return;
   const diff = e.changedTouches[0].clientX - touchStartX;
-  if (Math.abs(diff) > 40) {
+  if(Math.abs(diff) > 40){
     diff > 0 ? prev() : next();
   }
 }, { passive: true });
 
-// ==================== 放大功能 ====================
-// 双击放大/还原
+// ==================== PC双击放大 ====================
 showImg.addEventListener('dblclick', () => {
   scale = scale === 1 ? 1.8 : 1;
-  if (scale === 1) {
+  if(scale === 1){
     translateX = 0;
     translateY = 0;
   }
   updateTransform();
 });
 
-// 滚轮缩放
+// ==================== 滚轮缩放 ====================
 showImg.addEventListener('wheel', (e) => {
   e.preventDefault();
   scale += e.deltaY < 0 ? scaleStep : -scaleStep;
@@ -444,7 +459,7 @@ showImg.addEventListener('wheel', (e) => {
 
 // ==================== 放大后拖动查看 ====================
 showImg.addEventListener('mousedown', (e) => {
-  if (scale <= 1) return;
+  if(scale <= 1) return;
   isDragging = true;
   startX = e.clientX;
   startY = e.clientY;
@@ -452,7 +467,7 @@ showImg.addEventListener('mousedown', (e) => {
 });
 
 window.addEventListener('mousemove', (e) => {
-  if (!isDragging) return;
+  if(!isDragging) return;
   const dx = e.clientX - startX;
   const dy = e.clientY - startY;
   translateX += dx;
@@ -466,16 +481,16 @@ window.addEventListener('mouseup', () => {
   isDragging = false;
 });
 
-// ==================== 原图拖动切换 ====================
+// ==================== 正常状态拖动切换 ====================
 slider.addEventListener('mousedown', (e) => {
-  if (scale > 1) return;
+  if(scale > 1) return;
   startX = e.clientX;
 });
 
 slider.addEventListener('mouseup', (e) => {
-  if (scale > 1) return;
+  if(scale > 1) return;
   const diff = e.clientX - startX;
-  if (Math.abs(diff) > 60) {
+  if(Math.abs(diff) > 60){
     diff > 0 ? prev() : next();
   }
 });
