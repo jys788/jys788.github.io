@@ -36,11 +36,18 @@ body{background:#f7f5f2;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",
   align-items:center;
   justify-content:center;
   position:relative;
+  overflow:hidden;
 }
 #showImg{
   max-width:90%;
   max-height:90vh;
   object-fit:contain;
+  cursor:grab;
+  user-select:none;
+  transition:transform 0.2s ease;
+}
+#showImg:active{
+  cursor:grabbing;
 }
 
 .arrow{position:absolute;top:50%;transform:translateY(-50%);font-size:36px;color:#fff;background:rgba(255,255,255,.1);padding:10px 20px;border-radius:8px;cursor:pointer}
@@ -79,10 +86,19 @@ body{background:#f7f5f2;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",
 
 <script>
 const PASSWORD = "jiating2026";
-const total = 221;
 let cards = [];
 let current = 0;
 
+// 放大与拖动变量
+let scale = 1;
+const scaleStep = 0.1;
+let isDragging = false;
+let startX = 0;
+let startY = 0;
+let translateX = 0;
+let translateY = 0;
+
+// ====================== 照片标题数组（数量不限） ======================
 const photoTitles = [
 "来到妈妈肚子里",
 "妈妈怀孕七个月",
@@ -304,16 +320,19 @@ const photoTitles = [
 "发现丝瓜壳挺好玩",
 "看我顶",
 "新玩具恐龙挖宝",
-"正在挖宝中"
+"正在挖宝中",
+"达哥哥小时候"
 ];
 
+// ====================== 根据数组长度自动生成相册（不限数量） ======================
 const albumEl = document.getElementById("album");
-for (let i = 1; i <= total; i++) {
+for (let i = 0; i < photoTitles.length; i++) {
   const card = document.createElement("div");
   card.className = "card";
-  const title = photoTitles[i - 1] || `照片 ${i}`;
+  const title = photoTitles[i] || `照片 ${i+1}`;
+  const imgSrc = `${i + 1}.jpg`; // 自动对应 1.jpg 2.jpg ...
   card.innerHTML = `
-    <img src="${i}.jpg">
+    <img src="${imgSrc}">
     <div class="info">
       <div class="title">${title}</div>
       <div class="desc">家庭相册</div>
@@ -339,6 +358,10 @@ album.onclick = function (e) {
   const card = img.closest(".card");
   current = cards.indexOf(card);
   modal.style.display = "flex";
+  scale = 1;
+  translateX = 0;
+  translateY = 0;
+  updateTransform();
   render();
 };
 
@@ -350,10 +373,18 @@ function render() {
 
 function prev() {
   current = (current - 1 + cards.length) % cards.length;
+  scale = 1;
+  translateX = 0;
+  translateY = 0;
+  updateTransform();
   render();
 }
 function next() {
   current = (current + 1) % cards.length;
+  scale = 1;
+  translateX = 0;
+  translateY = 0;
+  updateTransform();
   render();
 }
 
@@ -371,37 +402,81 @@ document.onkeydown = (e) => {
   }
 };
 
+// 统一更新图片样式
+function updateTransform() {
+  showImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+}
+
+// ==================== 手机滑动切换 ====================
 let touchStartX = 0;
 const slider = document.querySelector('.slider');
 
 slider.addEventListener('touchstart', (e) => {
   touchStartX = e.changedTouches[0].clientX;
-});
+}, { passive: true });
 
 slider.addEventListener('touchend', (e) => {
+  if (scale !== 1) return;
   const diff = e.changedTouches[0].clientX - touchStartX;
-  if (Math.abs(diff) > 50) {
+  if (Math.abs(diff) > 40) {
     diff > 0 ? prev() : next();
   }
+}, { passive: true });
+
+// ==================== 放大功能 ====================
+// 双击放大/还原
+showImg.addEventListener('dblclick', () => {
+  scale = scale === 1 ? 1.8 : 1;
+  if (scale === 1) {
+    translateX = 0;
+    translateY = 0;
+  }
+  updateTransform();
 });
 
-let isDown = false;
-let startX = 0;
+// 滚轮缩放
+showImg.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  scale += e.deltaY < 0 ? scaleStep : -scaleStep;
+  scale = Math.max(1, Math.min(scale, 3));
+  updateTransform();
+}, { passive: false });
 
+// ==================== 放大后拖动查看 ====================
+showImg.addEventListener('mousedown', (e) => {
+  if (scale <= 1) return;
+  isDragging = true;
+  startX = e.clientX;
+  startY = e.clientY;
+  e.preventDefault();
+});
+
+window.addEventListener('mousemove', (e) => {
+  if (!isDragging) return;
+  const dx = e.clientX - startX;
+  const dy = e.clientY - startY;
+  translateX += dx;
+  translateY += dy;
+  startX = e.clientX;
+  startY = e.clientY;
+  updateTransform();
+});
+
+window.addEventListener('mouseup', () => {
+  isDragging = false;
+});
+
+// ==================== 原图拖动切换 ====================
 slider.addEventListener('mousedown', (e) => {
-  isDown = true;
+  if (scale > 1) return;
   startX = e.clientX;
 });
 
-slider.addEventListener('mouseup', () => isDown = false);
-slider.addEventListener('mouseleave', () => isDown = false);
-
-slider.addEventListener('mousemove', (e) => {
-  if (!isDown) return;
+slider.addEventListener('mouseup', (e) => {
+  if (scale > 1) return;
   const diff = e.clientX - startX;
   if (Math.abs(diff) > 60) {
     diff > 0 ? prev() : next();
-    isDown = false;
   }
 });
 </script>
